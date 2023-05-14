@@ -1,20 +1,19 @@
-%{
-#include"parser.tab.h"
-#include<string.h>
+{%
+#include<stdlib.h>
 %}
 
 number [0-9]+
-string [\"][^\"]+[\"]
-blank [\n\t ]+
-
+conditionSign [><]
+blank [\n|\t| ]+
 %%
-
-"cout"      {return COUT;}
-"endl"      {return ENDL;}
-{number}    {yylval.number = atoi(yytext); return NUMBER;}
-{string}    {char *tmp = strdup(yytext); tmp++; tmp[strlen(tmp) - 1] = '\0'; yylval.string = strdup(tmp); return STRING;}
-"<<"        {return INSERT;}
-";"         {return SEMI;}
+{number}    {
+                yylval = atoi(yytext);
+                return (NUMBER);}
+"if"        {return(IF);}
+"else"      {return(ELSE);}
+"{"         {return(BPR);}
+"}"         {return(BPL);}
+";"         {return(SEMI);}
+"("         {return(PL);}
+")"         {return(PR);}
 {blank}     {;}
-
-%%
