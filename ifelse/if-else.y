@@ -2,7 +2,7 @@
 #include <stdio.h>
 %}
 
-%token IF ELIF ELSE LP RP LCB RCB TRUE FALSE NUMBER
+%token IF ELIF ELSE LP RP LCB RCB TRUE FALSE NUMBER SEMI
 %token EOL
 
 
@@ -30,14 +30,12 @@ condition:TRUE  { $$ = 1; }
 |FALSE { $$ = 0; }
 ;
 
-statement:number { $$ = $1; }
-|ifElse statement { $$ = $2; }
-
-
+statement:
+|number statement
+|ifElse statement
 ;
 
-
-number:NUMBER {$$=$1;}
+number:NUMBER SEMI{$$=$1;}
 %%
 
 main(int argc,char **argv){
