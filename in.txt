@@ -1,0 +1,6 @@
+if(5>4){
+    cout<<"1"<<endl;
+}
+else{
+    cout<<"2"<<endl;
+}

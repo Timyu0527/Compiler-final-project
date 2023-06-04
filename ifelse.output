@@ -1,0 +1,1366 @@
+文法
+
+    0 $accept: S $end
+
+    1 S: /* 空白 */
+    2  | ifElse S
+
+    3 ifElse: if
+
+    4 if: IF LPAREN condition RPAREN LCB statement RCB
+    5   | IF LPAREN condition RPAREN LCB statement RCB elif
+
+    6 elif: ELIF LPAREN condition RPAREN LCB statement RCB elif
+    7     | ELIF LPAREN condition RPAREN LCB statement RCB else
+    8     | ELIF LPAREN condition RPAREN LCB statement RCB
+
+    9 else: ELSE LCB statement RCB
+
+   10 condition: /* 空白 */
+   11          | condition exp16 EOL
+
+   12 exp16: exp15
+   13      | exp15 QUES exp15 COLON exp15
+
+   14 exp15: exp14
+   15      | exp15 OR exp14
+
+   16 exp14: exp13
+   17      | exp14 AND exp13
+
+   18 exp13: exp12
+   19      | exp13 B_OR exp12
+
+   20 exp12: exp11
+   21      | exp12 B_XOR exp11
+
+   22 exp11: exp10
+   23      | exp11 B_AND exp10
+
+   24 exp10: exp9
+   25      | exp7 EQ exp7
+   26      | exp7 NE exp7
+
+   27 exp9: exp7
+   28     | exp7 LT exp7
+   29     | exp7 LE exp7
+   30     | exp7 GT exp7
+   31     | exp7 GE exp7
+
+   32 exp7: exp6
+   33     | exp7 LSHIFT exp6
+   34     | exp7 RSHIFT exp6
+
+   35 exp6: exp5
+   36     | exp6 ADD exp5
+   37     | exp6 SUB exp5
+
+   38 exp5: exp3
+   39     | exp5 MUL exp3
+   40     | exp5 DIV exp3
+   41     | exp5 MOD exp3
+
+   42 exp3: term
+   43     | NOT term
+   44     | B_NOT term
+
+   45 term: NUMBER
+   46     | BOOL
+   47     | LPAREN exp16 RPAREN
+
+   48 statement: display SEMI
+   49          | display SEMI statement SEMI
+   50          | ifElse statement
+
+   51 display: COUT
+   52        | display LSHIFT STRING
+   53        | display LSHIFT NUMBER
+   54        | display LSHIFT ENDL
+
+
+終結語詞，附有它們出現處的規則
+
+$end (0) 0
+error (256)
+STRING (258) 52
+NUMBER (259) 45 53
+COUT (260) 51
+ENDL (261) 54
+SEMI (262) 48 49
+EOL (263) 11
+LPAREN (264) 4 5 6 7 8 47
+RPAREN (265) 4 5 6 7 8 47
+BOOL (266) 46
+NOT (267) 43
+B_NOT (268) 44
+MUL (269) 39
+DIV (270) 40
+MOD (271) 41
+ADD (272) 36
+SUB (273) 37
+LSHIFT (274) 33 52 53 54
+RSHIFT (275) 34
+LT (276) 28
+LE (277) 29
+GT (278) 30
+GE (279) 31
+EQ (280) 25
+NE (281) 26
+B_AND (282) 23
+B_XOR (283) 21
+B_OR (284) 19
+AND (285) 17
+OR (286) 15
+QUES (287) 13
+COLON (288) 13
+IF (289) 4 5
+ELIF (290) 6 7 8
+ELSE (291) 9
+LCB (292) 4 5 6 7 8 9
+RCB (293) 4 5 6 7 8 9
+
+
+非終結語詞，附有它們出現處的規則
+
+$accept (39)
+   於左側： 0
+S (40)
+   於左側： 1 2,於右側： 0 2
+ifElse (41)
+   於左側： 3,於右側： 2 50
+if (42)
+   於左側： 4 5,於右側： 3
+elif (43)
+   於左側： 6 7 8,於右側： 5 6
+else (44)
+   於左側： 9,於右側： 7
+condition (45)
+   於左側： 10 11,於右側： 4 5 6 7 8 11
+exp16 (46)
+   於左側： 12 13,於右側： 11 47
+exp15 (47)
+   於左側： 14 15,於右側： 12 13 15
+exp14 (48)
+   於左側： 16 17,於右側： 14 15 17
+exp13 (49)
+   於左側： 18 19,於右側： 16 17 19
+exp12 (50)
+   於左側： 20 21,於右側： 18 19 21
+exp11 (51)
+   於左側： 22 23,於右側： 20 21 23
+exp10 (52)
+   於左側： 24 25 26,於右側： 22 23
+exp9 (53)
+   於左側： 27 28 29 30 31,於右側： 24
+exp7 (54)
+   於左側： 32 33 34,於右側： 25 26 27 28 29 30 31 33 34
+exp6 (55)
+   於左側： 35 36 37,於右側： 32 33 34 36 37
+exp5 (56)
+   於左側： 38 39 40 41,於右側： 35 36 37 39 40 41
+exp3 (57)
+   於左側： 42 43 44,於右側： 38 39 40 41
+term (58)
+   於左側： 45 46 47,於右側： 42 43 44
+statement (59)
+   於左側： 48 49 50,於右側： 4 5 6 7 8 9 49 50
+display (60)
+   於左側： 51 52 53 54,於右側： 48 49 52 53 54
+
+
+狀態 0
+
+    0 $accept: . S $end
+
+    IF  偏移，並進入狀態 1
+
+    $預設  使用規則 1 以縮減 (S)
+
+    S       進入狀態 2
+    ifElse  進入狀態 3
+    if      進入狀態 4
+
+
+狀態 1
+
+    4 if: IF . LPAREN condition RPAREN LCB statement RCB
+    5   | IF . LPAREN condition RPAREN LCB statement RCB elif
+
+    LPAREN  偏移，並進入狀態 5
+
+
+狀態 2
+
+    0 $accept: S . $end
+
+    $end  偏移，並進入狀態 6
+
+
+狀態 3
+
+    2 S: ifElse . S
+
+    IF  偏移，並進入狀態 1
+
+    $預設  使用規則 1 以縮減 (S)
+
+    S       進入狀態 7
+    ifElse  進入狀態 3
+    if      進入狀態 4
+
+
+狀態 4
+
+    3 ifElse: if .
+
+    $預設  使用規則 3 以縮減 (ifElse)
+
+
+狀態 5
+
+    4 if: IF LPAREN . condition RPAREN LCB statement RCB
+    5   | IF LPAREN . condition RPAREN LCB statement RCB elif
+
+    $預設  使用規則 10 以縮減 (condition)
+
+    condition  進入狀態 8
+
+
+狀態 6
+
+    0 $accept: S $end .
+
+    $預設  接受
+
+
+狀態 7
+
+    2 S: ifElse S .
+
+    $預設  使用規則 2 以縮減 (S)
+
+
+狀態 8
+
+    4 if: IF LPAREN condition . RPAREN LCB statement RCB
+    5   | IF LPAREN condition . RPAREN LCB statement RCB elif
+   11 condition: condition . exp16 EOL
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    RPAREN  偏移，並進入狀態 11
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp16  進入狀態 15
+    exp15  進入狀態 16
+    exp14  進入狀態 17
+    exp13  進入狀態 18
+    exp12  進入狀態 19
+    exp11  進入狀態 20
+    exp10  進入狀態 21
+    exp9   進入狀態 22
+    exp7   進入狀態 23
+    exp6   進入狀態 24
+    exp5   進入狀態 25
+    exp3   進入狀態 26
+    term   進入狀態 27
+
+
+狀態 9
+
+   45 term: NUMBER .
+
+    $預設  使用規則 45 以縮減 (term)
+
+
+狀態 10
+
+   47 term: LPAREN . exp16 RPAREN
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp16  進入狀態 28
+    exp15  進入狀態 16
+    exp14  進入狀態 17
+    exp13  進入狀態 18
+    exp12  進入狀態 19
+    exp11  進入狀態 20
+    exp10  進入狀態 21
+    exp9   進入狀態 22
+    exp7   進入狀態 23
+    exp6   進入狀態 24
+    exp5   進入狀態 25
+    exp3   進入狀態 26
+    term   進入狀態 27
+
+
+狀態 11
+
+    4 if: IF LPAREN condition RPAREN . LCB statement RCB
+    5   | IF LPAREN condition RPAREN . LCB statement RCB elif
+
+    LCB  偏移，並進入狀態 29
+
+
+狀態 12
+
+   46 term: BOOL .
+
+    $預設  使用規則 46 以縮減 (term)
+
+
+狀態 13
+
+   43 exp3: NOT . term
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+
+    term  進入狀態 30
+
+
+狀態 14
+
+   44 exp3: B_NOT . term
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+
+    term  進入狀態 31
+
+
+狀態 15
+
+   11 condition: condition exp16 . EOL
+
+    EOL  偏移，並進入狀態 32
+
+
+狀態 16
+
+   12 exp16: exp15 .
+   13      | exp15 . QUES exp15 COLON exp15
+   15 exp15: exp15 . OR exp14
+
+    OR    偏移，並進入狀態 33
+    QUES  偏移，並進入狀態 34
+
+    $預設  使用規則 12 以縮減 (exp16)
+
+
+狀態 17
+
+   14 exp15: exp14 .
+   17 exp14: exp14 . AND exp13
+
+    AND  偏移，並進入狀態 35
+
+    $預設  使用規則 14 以縮減 (exp15)
+
+
+狀態 18
+
+   16 exp14: exp13 .
+   19 exp13: exp13 . B_OR exp12
+
+    B_OR  偏移，並進入狀態 36
+
+    $預設  使用規則 16 以縮減 (exp14)
+
+
+狀態 19
+
+   18 exp13: exp12 .
+   21 exp12: exp12 . B_XOR exp11
+
+    B_XOR  偏移，並進入狀態 37
+
+    $預設  使用規則 18 以縮減 (exp13)
+
+
+狀態 20
+
+   20 exp12: exp11 .
+   23 exp11: exp11 . B_AND exp10
+
+    B_AND  偏移，並進入狀態 38
+
+    $預設  使用規則 20 以縮減 (exp12)
+
+
+狀態 21
+
+   22 exp11: exp10 .
+
+    $預設  使用規則 22 以縮減 (exp11)
+
+
+狀態 22
+
+   24 exp10: exp9 .
+
+    $預設  使用規則 24 以縮減 (exp10)
+
+
+狀態 23
+
+   25 exp10: exp7 . EQ exp7
+   26      | exp7 . NE exp7
+   27 exp9: exp7 .
+   28     | exp7 . LT exp7
+   29     | exp7 . LE exp7
+   30     | exp7 . GT exp7
+   31     | exp7 . GE exp7
+   33 exp7: exp7 . LSHIFT exp6
+   34     | exp7 . RSHIFT exp6
+
+    LSHIFT  偏移，並進入狀態 39
+    RSHIFT  偏移，並進入狀態 40
+    LT      偏移，並進入狀態 41
+    LE      偏移，並進入狀態 42
+    GT      偏移，並進入狀態 43
+    GE      偏移，並進入狀態 44
+    EQ      偏移，並進入狀態 45
+    NE      偏移，並進入狀態 46
+
+    $預設  使用規則 27 以縮減 (exp9)
+
+
+狀態 24
+
+   32 exp7: exp6 .
+   36 exp6: exp6 . ADD exp5
+   37     | exp6 . SUB exp5
+
+    ADD  偏移，並進入狀態 47
+    SUB  偏移，並進入狀態 48
+
+    $預設  使用規則 32 以縮減 (exp7)
+
+
+狀態 25
+
+   35 exp6: exp5 .
+   39 exp5: exp5 . MUL exp3
+   40     | exp5 . DIV exp3
+   41     | exp5 . MOD exp3
+
+    MUL  偏移，並進入狀態 49
+    DIV  偏移，並進入狀態 50
+    MOD  偏移，並進入狀態 51
+
+    $預設  使用規則 35 以縮減 (exp6)
+
+
+狀態 26
+
+   38 exp5: exp3 .
+
+    $預設  使用規則 38 以縮減 (exp5)
+
+
+狀態 27
+
+   42 exp3: term .
+
+    $預設  使用規則 42 以縮減 (exp3)
+
+
+狀態 28
+
+   47 term: LPAREN exp16 . RPAREN
+
+    RPAREN  偏移，並進入狀態 52
+
+
+狀態 29
+
+    4 if: IF LPAREN condition RPAREN LCB . statement RCB
+    5   | IF LPAREN condition RPAREN LCB . statement RCB elif
+
+    COUT  偏移，並進入狀態 53
+    IF    偏移，並進入狀態 1
+
+    ifElse     進入狀態 54
+    if         進入狀態 4
+    statement  進入狀態 55
+    display    進入狀態 56
+
+
+狀態 30
+
+   43 exp3: NOT term .
+
+    $預設  使用規則 43 以縮減 (exp3)
+
+
+狀態 31
+
+   44 exp3: B_NOT term .
+
+    $預設  使用規則 44 以縮減 (exp3)
+
+
+狀態 32
+
+   11 condition: condition exp16 EOL .
+
+    $預設  使用規則 11 以縮減 (condition)
+
+
+狀態 33
+
+   15 exp15: exp15 OR . exp14
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp14  進入狀態 57
+    exp13  進入狀態 18
+    exp12  進入狀態 19
+    exp11  進入狀態 20
+    exp10  進入狀態 21
+    exp9   進入狀態 22
+    exp7   進入狀態 23
+    exp6   進入狀態 24
+    exp5   進入狀態 25
+    exp3   進入狀態 26
+    term   進入狀態 27
+
+
+狀態 34
+
+   13 exp16: exp15 QUES . exp15 COLON exp15
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp15  進入狀態 58
+    exp14  進入狀態 17
+    exp13  進入狀態 18
+    exp12  進入狀態 19
+    exp11  進入狀態 20
+    exp10  進入狀態 21
+    exp9   進入狀態 22
+    exp7   進入狀態 23
+    exp6   進入狀態 24
+    exp5   進入狀態 25
+    exp3   進入狀態 26
+    term   進入狀態 27
+
+
+狀態 35
+
+   17 exp14: exp14 AND . exp13
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp13  進入狀態 59
+    exp12  進入狀態 19
+    exp11  進入狀態 20
+    exp10  進入狀態 21
+    exp9   進入狀態 22
+    exp7   進入狀態 23
+    exp6   進入狀態 24
+    exp5   進入狀態 25
+    exp3   進入狀態 26
+    term   進入狀態 27
+
+
+狀態 36
+
+   19 exp13: exp13 B_OR . exp12
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp12  進入狀態 60
+    exp11  進入狀態 20
+    exp10  進入狀態 21
+    exp9   進入狀態 22
+    exp7   進入狀態 23
+    exp6   進入狀態 24
+    exp5   進入狀態 25
+    exp3   進入狀態 26
+    term   進入狀態 27
+
+
+狀態 37
+
+   21 exp12: exp12 B_XOR . exp11
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp11  進入狀態 61
+    exp10  進入狀態 21
+    exp9   進入狀態 22
+    exp7   進入狀態 23
+    exp6   進入狀態 24
+    exp5   進入狀態 25
+    exp3   進入狀態 26
+    term   進入狀態 27
+
+
+狀態 38
+
+   23 exp11: exp11 B_AND . exp10
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp10  進入狀態 62
+    exp9   進入狀態 22
+    exp7   進入狀態 23
+    exp6   進入狀態 24
+    exp5   進入狀態 25
+    exp3   進入狀態 26
+    term   進入狀態 27
+
+
+狀態 39
+
+   33 exp7: exp7 LSHIFT . exp6
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp6  進入狀態 63
+    exp5  進入狀態 25
+    exp3  進入狀態 26
+    term  進入狀態 27
+
+
+狀態 40
+
+   34 exp7: exp7 RSHIFT . exp6
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp6  進入狀態 64
+    exp5  進入狀態 25
+    exp3  進入狀態 26
+    term  進入狀態 27
+
+
+狀態 41
+
+   28 exp9: exp7 LT . exp7
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp7  進入狀態 65
+    exp6  進入狀態 24
+    exp5  進入狀態 25
+    exp3  進入狀態 26
+    term  進入狀態 27
+
+
+狀態 42
+
+   29 exp9: exp7 LE . exp7
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp7  進入狀態 66
+    exp6  進入狀態 24
+    exp5  進入狀態 25
+    exp3  進入狀態 26
+    term  進入狀態 27
+
+
+狀態 43
+
+   30 exp9: exp7 GT . exp7
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp7  進入狀態 67
+    exp6  進入狀態 24
+    exp5  進入狀態 25
+    exp3  進入狀態 26
+    term  進入狀態 27
+
+
+狀態 44
+
+   31 exp9: exp7 GE . exp7
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp7  進入狀態 68
+    exp6  進入狀態 24
+    exp5  進入狀態 25
+    exp3  進入狀態 26
+    term  進入狀態 27
+
+
+狀態 45
+
+   25 exp10: exp7 EQ . exp7
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp7  進入狀態 69
+    exp6  進入狀態 24
+    exp5  進入狀態 25
+    exp3  進入狀態 26
+    term  進入狀態 27
+
+
+狀態 46
+
+   26 exp10: exp7 NE . exp7
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp7  進入狀態 70
+    exp6  進入狀態 24
+    exp5  進入狀態 25
+    exp3  進入狀態 26
+    term  進入狀態 27
+
+
+狀態 47
+
+   36 exp6: exp6 ADD . exp5
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp5  進入狀態 71
+    exp3  進入狀態 26
+    term  進入狀態 27
+
+
+狀態 48
+
+   37 exp6: exp6 SUB . exp5
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp5  進入狀態 72
+    exp3  進入狀態 26
+    term  進入狀態 27
+
+
+狀態 49
+
+   39 exp5: exp5 MUL . exp3
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp3  進入狀態 73
+    term  進入狀態 27
+
+
+狀態 50
+
+   40 exp5: exp5 DIV . exp3
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp3  進入狀態 74
+    term  進入狀態 27
+
+
+狀態 51
+
+   41 exp5: exp5 MOD . exp3
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp3  進入狀態 75
+    term  進入狀態 27
+
+
+狀態 52
+
+   47 term: LPAREN exp16 RPAREN .
+
+    $預設  使用規則 47 以縮減 (term)
+
+
+狀態 53
+
+   51 display: COUT .
+
+    $預設  使用規則 51 以縮減 (display)
+
+
+狀態 54
+
+   50 statement: ifElse . statement
+
+    COUT  偏移，並進入狀態 53
+    IF    偏移，並進入狀態 1
+
+    ifElse     進入狀態 54
+    if         進入狀態 4
+    statement  進入狀態 76
+    display    進入狀態 56
+
+
+狀態 55
+
+    4 if: IF LPAREN condition RPAREN LCB statement . RCB
+    5   | IF LPAREN condition RPAREN LCB statement . RCB elif
+
+    RCB  偏移，並進入狀態 77
+
+
+狀態 56
+
+   48 statement: display . SEMI
+   49          | display . SEMI statement SEMI
+   52 display: display . LSHIFT STRING
+   53        | display . LSHIFT NUMBER
+   54        | display . LSHIFT ENDL
+
+    SEMI    偏移，並進入狀態 78
+    LSHIFT  偏移，並進入狀態 79
+
+
+狀態 57
+
+   15 exp15: exp15 OR exp14 .
+   17 exp14: exp14 . AND exp13
+
+    AND  偏移，並進入狀態 35
+
+    $預設  使用規則 15 以縮減 (exp15)
+
+
+狀態 58
+
+   13 exp16: exp15 QUES exp15 . COLON exp15
+   15 exp15: exp15 . OR exp14
+
+    OR     偏移，並進入狀態 33
+    COLON  偏移，並進入狀態 80
+
+
+狀態 59
+
+   17 exp14: exp14 AND exp13 .
+   19 exp13: exp13 . B_OR exp12
+
+    B_OR  偏移，並進入狀態 36
+
+    $預設  使用規則 17 以縮減 (exp14)
+
+
+狀態 60
+
+   19 exp13: exp13 B_OR exp12 .
+   21 exp12: exp12 . B_XOR exp11
+
+    B_XOR  偏移，並進入狀態 37
+
+    $預設  使用規則 19 以縮減 (exp13)
+
+
+狀態 61
+
+   21 exp12: exp12 B_XOR exp11 .
+   23 exp11: exp11 . B_AND exp10
+
+    B_AND  偏移，並進入狀態 38
+
+    $預設  使用規則 21 以縮減 (exp12)
+
+
+狀態 62
+
+   23 exp11: exp11 B_AND exp10 .
+
+    $預設  使用規則 23 以縮減 (exp11)
+
+
+狀態 63
+
+   33 exp7: exp7 LSHIFT exp6 .
+   36 exp6: exp6 . ADD exp5
+   37     | exp6 . SUB exp5
+
+    ADD  偏移，並進入狀態 47
+    SUB  偏移，並進入狀態 48
+
+    $預設  使用規則 33 以縮減 (exp7)
+
+
+狀態 64
+
+   34 exp7: exp7 RSHIFT exp6 .
+   36 exp6: exp6 . ADD exp5
+   37     | exp6 . SUB exp5
+
+    ADD  偏移，並進入狀態 47
+    SUB  偏移，並進入狀態 48
+
+    $預設  使用規則 34 以縮減 (exp7)
+
+
+狀態 65
+
+   28 exp9: exp7 LT exp7 .
+   33 exp7: exp7 . LSHIFT exp6
+   34     | exp7 . RSHIFT exp6
+
+    LSHIFT  偏移，並進入狀態 39
+    RSHIFT  偏移，並進入狀態 40
+
+    $預設  使用規則 28 以縮減 (exp9)
+
+
+狀態 66
+
+   29 exp9: exp7 LE exp7 .
+   33 exp7: exp7 . LSHIFT exp6
+   34     | exp7 . RSHIFT exp6
+
+    LSHIFT  偏移，並進入狀態 39
+    RSHIFT  偏移，並進入狀態 40
+
+    $預設  使用規則 29 以縮減 (exp9)
+
+
+狀態 67
+
+   30 exp9: exp7 GT exp7 .
+   33 exp7: exp7 . LSHIFT exp6
+   34     | exp7 . RSHIFT exp6
+
+    LSHIFT  偏移，並進入狀態 39
+    RSHIFT  偏移，並進入狀態 40
+
+    $預設  使用規則 30 以縮減 (exp9)
+
+
+狀態 68
+
+   31 exp9: exp7 GE exp7 .
+   33 exp7: exp7 . LSHIFT exp6
+   34     | exp7 . RSHIFT exp6
+
+    LSHIFT  偏移，並進入狀態 39
+    RSHIFT  偏移，並進入狀態 40
+
+    $預設  使用規則 31 以縮減 (exp9)
+
+
+狀態 69
+
+   25 exp10: exp7 EQ exp7 .
+   33 exp7: exp7 . LSHIFT exp6
+   34     | exp7 . RSHIFT exp6
+
+    LSHIFT  偏移，並進入狀態 39
+    RSHIFT  偏移，並進入狀態 40
+
+    $預設  使用規則 25 以縮減 (exp10)
+
+
+狀態 70
+
+   26 exp10: exp7 NE exp7 .
+   33 exp7: exp7 . LSHIFT exp6
+   34     | exp7 . RSHIFT exp6
+
+    LSHIFT  偏移，並進入狀態 39
+    RSHIFT  偏移，並進入狀態 40
+
+    $預設  使用規則 26 以縮減 (exp10)
+
+
+狀態 71
+
+   36 exp6: exp6 ADD exp5 .
+   39 exp5: exp5 . MUL exp3
+   40     | exp5 . DIV exp3
+   41     | exp5 . MOD exp3
+
+    MUL  偏移，並進入狀態 49
+    DIV  偏移，並進入狀態 50
+    MOD  偏移，並進入狀態 51
+
+    $預設  使用規則 36 以縮減 (exp6)
+
+
+狀態 72
+
+   37 exp6: exp6 SUB exp5 .
+   39 exp5: exp5 . MUL exp3
+   40     | exp5 . DIV exp3
+   41     | exp5 . MOD exp3
+
+    MUL  偏移，並進入狀態 49
+    DIV  偏移，並進入狀態 50
+    MOD  偏移，並進入狀態 51
+
+    $預設  使用規則 37 以縮減 (exp6)
+
+
+狀態 73
+
+   39 exp5: exp5 MUL exp3 .
+
+    $預設  使用規則 39 以縮減 (exp5)
+
+
+狀態 74
+
+   40 exp5: exp5 DIV exp3 .
+
+    $預設  使用規則 40 以縮減 (exp5)
+
+
+狀態 75
+
+   41 exp5: exp5 MOD exp3 .
+
+    $預設  使用規則 41 以縮減 (exp5)
+
+
+狀態 76
+
+   50 statement: ifElse statement .
+
+    $預設  使用規則 50 以縮減 (statement)
+
+
+狀態 77
+
+    4 if: IF LPAREN condition RPAREN LCB statement RCB .
+    5   | IF LPAREN condition RPAREN LCB statement RCB . elif
+
+    ELIF  偏移，並進入狀態 81
+
+    $預設  使用規則 4 以縮減 (if)
+
+    elif  進入狀態 82
+
+
+狀態 78
+
+   48 statement: display SEMI .
+   49          | display SEMI . statement SEMI
+
+    COUT  偏移，並進入狀態 53
+    IF    偏移，並進入狀態 1
+
+    $預設  使用規則 48 以縮減 (statement)
+
+    ifElse     進入狀態 54
+    if         進入狀態 4
+    statement  進入狀態 83
+    display    進入狀態 56
+
+
+狀態 79
+
+   52 display: display LSHIFT . STRING
+   53        | display LSHIFT . NUMBER
+   54        | display LSHIFT . ENDL
+
+    STRING  偏移，並進入狀態 84
+    NUMBER  偏移，並進入狀態 85
+    ENDL    偏移，並進入狀態 86
+
+
+狀態 80
+
+   13 exp16: exp15 QUES exp15 COLON . exp15
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp15  進入狀態 87
+    exp14  進入狀態 17
+    exp13  進入狀態 18
+    exp12  進入狀態 19
+    exp11  進入狀態 20
+    exp10  進入狀態 21
+    exp9   進入狀態 22
+    exp7   進入狀態 23
+    exp6   進入狀態 24
+    exp5   進入狀態 25
+    exp3   進入狀態 26
+    term   進入狀態 27
+
+
+狀態 81
+
+    6 elif: ELIF . LPAREN condition RPAREN LCB statement RCB elif
+    7     | ELIF . LPAREN condition RPAREN LCB statement RCB else
+    8     | ELIF . LPAREN condition RPAREN LCB statement RCB
+
+    LPAREN  偏移，並進入狀態 88
+
+
+狀態 82
+
+    5 if: IF LPAREN condition RPAREN LCB statement RCB elif .
+
+    $預設  使用規則 5 以縮減 (if)
+
+
+狀態 83
+
+   49 statement: display SEMI statement . SEMI
+
+    SEMI  偏移，並進入狀態 89
+
+
+狀態 84
+
+   52 display: display LSHIFT STRING .
+
+    $預設  使用規則 52 以縮減 (display)
+
+
+狀態 85
+
+   53 display: display LSHIFT NUMBER .
+
+    $預設  使用規則 53 以縮減 (display)
+
+
+狀態 86
+
+   54 display: display LSHIFT ENDL .
+
+    $預設  使用規則 54 以縮減 (display)
+
+
+狀態 87
+
+   13 exp16: exp15 QUES exp15 COLON exp15 .
+   15 exp15: exp15 . OR exp14
+
+    OR  偏移，並進入狀態 33
+
+    $預設  使用規則 13 以縮減 (exp16)
+
+
+狀態 88
+
+    6 elif: ELIF LPAREN . condition RPAREN LCB statement RCB elif
+    7     | ELIF LPAREN . condition RPAREN LCB statement RCB else
+    8     | ELIF LPAREN . condition RPAREN LCB statement RCB
+
+    $預設  使用規則 10 以縮減 (condition)
+
+    condition  進入狀態 90
+
+
+狀態 89
+
+   49 statement: display SEMI statement SEMI .
+
+    $預設  使用規則 49 以縮減 (statement)
+
+
+狀態 90
+
+    6 elif: ELIF LPAREN condition . RPAREN LCB statement RCB elif
+    7     | ELIF LPAREN condition . RPAREN LCB statement RCB else
+    8     | ELIF LPAREN condition . RPAREN LCB statement RCB
+   11 condition: condition . exp16 EOL
+
+    NUMBER  偏移，並進入狀態 9
+    LPAREN  偏移，並進入狀態 10
+    RPAREN  偏移，並進入狀態 91
+    BOOL    偏移，並進入狀態 12
+    NOT     偏移，並進入狀態 13
+    B_NOT   偏移，並進入狀態 14
+
+    exp16  進入狀態 15
+    exp15  進入狀態 16
+    exp14  進入狀態 17
+    exp13  進入狀態 18
+    exp12  進入狀態 19
+    exp11  進入狀態 20
+    exp10  進入狀態 21
+    exp9   進入狀態 22
+    exp7   進入狀態 23
+    exp6   進入狀態 24
+    exp5   進入狀態 25
+    exp3   進入狀態 26
+    term   進入狀態 27
+
+
+狀態 91
+
+    6 elif: ELIF LPAREN condition RPAREN . LCB statement RCB elif
+    7     | ELIF LPAREN condition RPAREN . LCB statement RCB else
+    8     | ELIF LPAREN condition RPAREN . LCB statement RCB
+
+    LCB  偏移，並進入狀態 92
+
+
+狀態 92
+
+    6 elif: ELIF LPAREN condition RPAREN LCB . statement RCB elif
+    7     | ELIF LPAREN condition RPAREN LCB . statement RCB else
+    8     | ELIF LPAREN condition RPAREN LCB . statement RCB
+
+    COUT  偏移，並進入狀態 53
+    IF    偏移，並進入狀態 1
+
+    ifElse     進入狀態 54
+    if         進入狀態 4
+    statement  進入狀態 93
+    display    進入狀態 56
+
+
+狀態 93
+
+    6 elif: ELIF LPAREN condition RPAREN LCB statement . RCB elif
+    7     | ELIF LPAREN condition RPAREN LCB statement . RCB else
+    8     | ELIF LPAREN condition RPAREN LCB statement . RCB
+
+    RCB  偏移，並進入狀態 94
+
+
+狀態 94
+
+    6 elif: ELIF LPAREN condition RPAREN LCB statement RCB . elif
+    7     | ELIF LPAREN condition RPAREN LCB statement RCB . else
+    8     | ELIF LPAREN condition RPAREN LCB statement RCB .
+
+    ELIF  偏移，並進入狀態 81
+    ELSE  偏移，並進入狀態 95
+
+    $預設  使用規則 8 以縮減 (elif)
+
+    elif  進入狀態 96
+    else  進入狀態 97
+
+
+狀態 95
+
+    9 else: ELSE . LCB statement RCB
+
+    LCB  偏移，並進入狀態 98
+
+
+狀態 96
+
+    6 elif: ELIF LPAREN condition RPAREN LCB statement RCB elif .
+
+    $預設  使用規則 6 以縮減 (elif)
+
+
+狀態 97
+
+    7 elif: ELIF LPAREN condition RPAREN LCB statement RCB else .
+
+    $預設  使用規則 7 以縮減 (elif)
+
+
+狀態 98
+
+    9 else: ELSE LCB . statement RCB
+
+    COUT  偏移，並進入狀態 53
+    IF    偏移，並進入狀態 1
+
+    ifElse     進入狀態 54
+    if         進入狀態 4
+    statement  進入狀態 99
+    display    進入狀態 56
+
+
+狀態 99
+
+    9 else: ELSE LCB statement . RCB
+
+    RCB  偏移，並進入狀態 100
+
+
+狀態 100
+
+    9 else: ELSE LCB statement RCB .
+
+    $預設  使用規則 9 以縮減 (else)
