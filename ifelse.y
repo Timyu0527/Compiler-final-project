@@ -76,8 +76,7 @@ else:ELSE LCB statement RCB {$$ = $3;}
 ;
 
 
-condition:{$$ = 0;}
-    |condition exp16 { $$ = $2; }
+condition:exp16 {$$ = $1;}
     ;
 
 exp16:exp15 {$$=$1;}
