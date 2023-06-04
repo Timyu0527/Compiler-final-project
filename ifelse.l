@@ -15,9 +15,7 @@ string [\"][^\"]+[\"]
 
 ";"         {return SEMI;}
 
-[\t] 	{;}
-[ ] 	{;}
-[\n]     {return EOL;}
+[\t \n] 	{;}
 
 "true"      {yylval.number=1; return BOOL;}
 "false"     {yylval.number=0; return BOOL;}

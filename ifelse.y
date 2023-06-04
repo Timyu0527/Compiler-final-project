@@ -34,7 +34,6 @@
 %token <number> NUMBER 
 %token COUT ENDL SEMI
 
-%token EOL
 %token LPAREN RPAREN
 
 %token BOOL
@@ -60,10 +59,10 @@
 S:
 |ifElse S;
 
-ifElse: if {printf("%d\n",$1);}
+ifElse: if {}
 ;
 
-if:IF LPAREN condition RPAREN LCB statement RCB {printf("%d\n", $3); if($3){$$ = $6;}else{$$=0;}}
+if:IF LPAREN condition RPAREN LCB statement RCB {if($3){$$ = $6;}else{$$=0;}}
 |IF LPAREN condition RPAREN LCB statement RCB elif {if($3){$$ = $6;}else{$$=$8;} }
 ;
 
@@ -77,7 +76,7 @@ else:ELSE LCB statement RCB {$$ = $3;}
 
 
 condition:{$$ = 0;}
-    |condition exp16 EOL { $$ = $2; }
+    |condition exp16 { $$ = $2; }
     ;
 
 exp16:exp15 {$$=$1;}
@@ -150,7 +149,7 @@ term:
 
 statement:
     display SEMI
-    | display SEMI statement SEMI
+    | display SEMI statement
     | ifElse statement
 ;
 
