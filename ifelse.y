@@ -64,6 +64,7 @@ ifElse: if {}
 
 if:IF LPAREN condition RPAREN LCB statement RCB {if($3){$$ = $6;}else{$$=0;}}
 |IF LPAREN condition RPAREN LCB statement RCB elif {if($3){$$ = $6;}else{$$=$8;} }
+|IF LPAREN condition RPAREN LCB statement RCB else {if($3){$$ = $6;}else{$$=$8;} }
 ;
 
 elif:ELIF LPAREN condition RPAREN LCB statement RCB elif {if($3){$$ = $6;}else{$$=$8;}}
