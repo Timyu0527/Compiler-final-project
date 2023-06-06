@@ -28,12 +28,11 @@ int boolean = 0;
 %type <number> exp3
 %type <number> term
 %type <number> BOOL
-%type <node> node;
 
 %union {
     int number;
     char *string;
-    // Node *node;
+}
 
 
 %token <string> STRING
@@ -68,8 +67,8 @@ S:
 ifElse: if {
     print_list(list);
     init(&list);
-    printf("return value\n");
-    printf("%d\n", $1);
+    // printf("return value\n");
+    // printf("%d\n", $1);
 }
 ;
 
