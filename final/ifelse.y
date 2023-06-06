@@ -3,8 +3,10 @@
 #include<stdlib.h>
 #include"linkedlist.h"
 
-struct Node *list = NULL;
+struct Node *list[100] = {};
 int boolean = 0;
+int listcounter = 0;
+int printnum;
 %}
 
 %type <number> statement
@@ -65,25 +67,35 @@ S:
 |ifElse S;
 
 ifElse: if {
-    print_list(list);
-    init(&list);
+    print_list(list[printnum]);
+    init(&list[printnum]);
     // printf("return value\n");
     // printf("%d\n", $1);
 }
 ;
 
 if:IF LPAREN condition RPAREN LCB statement RCB {
+    listcounter--;
     if($3){
-        $$ = $6;
+        printnum = listcounter;
     }
     else{
         $$ = 0;
     }
 }
-|IF LPAREN condition RPAREN LCB statement RCB elif {if($3){$$ = $6;}else{$$=$8;} }
-|IF LPAREN condition RPAREN LCB statement RCB else {
+|IF LPAREN condition RPAREN LCB statement RCB elif {
+    listcounter--;
     if($3){
         $$ = $6;
+        printnum = listcounter;
+    }
+    else{$$=$8;} 
+}
+|IF LPAREN condition RPAREN LCB statement RCB else {
+    listcounter--;
+    if($3){
+        $$ = $6;
+        printnum = listcounter;
     }
     else{
         $$ = $8;
@@ -91,12 +103,36 @@ if:IF LPAREN condition RPAREN LCB statement RCB {
 }
 ;
 
-elif:ELIF LPAREN condition RPAREN LCB statement RCB elif {if($3){$$ = $6;}else{$$=$8;}}
-|ELIF LPAREN condition RPAREN LCB statement RCB else {if($3){$$ = $6;}else{$$=$8;}}
-|ELIF LPAREN condition RPAREN LCB statement RCB {if($3){$$ = $6;}}
+elif:ELIF LPAREN condition RPAREN LCB statement RCB elif {
+    listcounter--;
+    if($3){
+        $$ = $6;
+        printnum = listcounter;
+    }
+    else{$$=$8;}
+}
+|ELIF LPAREN condition RPAREN LCB statement RCB else {
+    listcounter--;
+    if($3){
+        $$ = $6;
+        printnum = listcounter;
+    }
+    else{$$=$8;}
+}
+|ELIF LPAREN condition RPAREN LCB statement RCB {
+    listcounter--;
+    if($3){
+        $$ = $6;
+        printnum = listcounter;
+    }    
+}
 ;
 
-else:ELSE LCB statement RCB {$$ = $3;}
+else:ELSE LCB statement RCB {
+    $$ = $3;
+    listcounter--;
+    printnum = listcounter;
+}
 ;
 
 
@@ -172,16 +208,16 @@ term:
 // ;
 
 statement:
-    display SEMI
+    display SEMI{listcounter++;}
     | display SEMI statement
     | ifElse statement
 ;
 
 display:
     COUT                    {$$ = (int)stdout;}
-    | display LSHIFT STRING {push_back(&list, 1, 0, $3); $$ = $1; free(yylval.string);}
-    | display LSHIFT NUMBER {push_back(&list, 0, $3, NULL); $$ = $1;}
-    | display LSHIFT ENDL   {char tmp[] = "\n"; push_back(&list, 1, 0, tmp); $$ = $1;}
+    | display LSHIFT STRING {push_back(&list[listcounter], 1, 0, $3); $$ = $1; free(yylval.string);}
+    | display LSHIFT NUMBER {push_back(&list[listcounter], 0, $3, NULL); $$ = $1;}
+    | display LSHIFT ENDL   {char tmp[] = "\n"; push_back(&list[listcounter], 1, 0, tmp); $$ = $1;}
 ;
 
 // %destructors {
